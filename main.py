@@ -62,14 +62,14 @@ Output each scenario in Gherkin syntax.
 def generate_scenario():
     data = request.get_json()
     provider = data.get("provider")
-    service = data.get("service")
+    service = data.get("resource")
 
     if not provider or not service:
         return jsonify(
-            {"error": "Both 'provider' and 'service' are required fields"}
+            {"error": "Both 'provider' and 'resource' are required fields"}
         ), 400
 
-    response = query_engine.query(generate_bdd_scenario_template(provider, service))
+    response = llm.complete(generate_bdd_scenario_template(provider, service))
 
     return str(response)
 

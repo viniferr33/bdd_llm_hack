@@ -58,6 +58,23 @@ Output each scenario in Gherkin syntax.
 
 
 # Define the POST endpoint
+@app.route("/generate_scenario_v2", methods=["POST"])
+def generate_scenario_v2():
+    data = request.get_json()
+    provider = data.get("provider")
+    service = data.get("resource")
+
+    if not provider or not service:
+        return jsonify(
+            {"error": "Both 'provider' and 'resource' are required fields"}
+        ), 400
+
+    response = query_engine.query(generate_bdd_scenario_template(provider, service))
+
+    return str(response)
+
+
+# Define the POST endpoint
 @app.route("/generate_scenario", methods=["POST"])
 def generate_scenario():
     data = request.get_json()
